@@ -1,45 +1,41 @@
 package cz.PacMan.main;
 
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
+
+import java.util.Hashtable;
 
 import cz.PacMan.entities.Zed;
 
 public class Model {
 	private static ArrayList<String> lines = new ArrayList<String>();
-	private static ArrayList<Zed> zdi = new ArrayList<Zed>();;
-	private static int levels = 1;
+	private static ArrayList<Zed> zdi = new ArrayList<Zed>();
 	private String line;
-	private Reader in;
-	private BufferedReader br;
 	private static ArrayList<int[]> enemyPositions = new ArrayList<int[]>();
+	private static Hashtable<ArrayList<Integer>, String> map = new Hashtable<ArrayList<Integer>, String>();
 
 	public Model() {
 	}
 
 	// InputStream
 	public void levels() {
-		try {
-			if (levels < 4) {
-				//in = new InputStreamReader();
-				br = new BufferedReader(in);
-				while ((line = br.readLine()) != null) {
-					lines.add(line);
-				}
-				initLevel();
-				in.close();
-			}
-
-		} catch (Exception e) {
-			System.err.println("Error: " + e.getMessage());
-		}
-
+		line = "###########";
+		lines.add(line);
+		line = "#.........#";
+		lines.add(line);
+		line = "#.##.#.##.#";
+		lines.add(line);
+		line = "#.#.....#.#";
+		lines.add(line);
+		line = "#...#S#...#";
+		lines.add(line);
+		line = "#.#.....#.#";
+		lines.add(line);
+		line = "#...#.#...#";
+		lines.add(line);
+		line = "###########";
+		lines.add(line);
 	}
 
 	public void initLevel() {
@@ -51,8 +47,16 @@ public class Model {
 					int y2 = (y * 32);
 					zdi.add(new Zed(x2, y2));
 				}
+				ArrayList<Integer> souradnice = new ArrayList<Integer>();
+				souradnice.add(x);
+				souradnice.add(y);
+				map.put(souradnice, brick);
 			}
 		}
+	}
+	
+	public Hashtable<ArrayList<Integer>, String> getMap(){
+		return map;
 	}
 
 	/*
@@ -60,9 +64,8 @@ public class Model {
 	 */
 
 	public void startNewGame() {
-		levels = 1;
-		//player.setX(40);
-		//player.setY(40);
+		// player.setX(40);
+		// player.setY(40);
 		zdi.clear();
 		lines.clear();
 		enemyPositions.clear();
