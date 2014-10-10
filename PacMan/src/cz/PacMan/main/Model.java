@@ -1,7 +1,5 @@
 package cz.PacMan.main;
 
-import java.io.BufferedReader;
-import java.io.Reader;
 import java.util.ArrayList;
 
 import java.util.Hashtable;
