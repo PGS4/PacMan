@@ -12,14 +12,15 @@ public class PacMan {
 	public static void main(String[] args) {
 		Model model = new Model();
 		ArrayList<Integer> sourky = new ArrayList<Integer>();
-		model.levels();
-		model.initLevel();
+		//model.levels();
+		//model.initLevel();
 		System.out.println(model.getMap().get(sourky));
 		//Podvozek.podvozekDopredu(900);
-		Button.waitForAnyPress();
+		//Button.waitForAnyPress();
 		/*while(Button.ESCAPE.isDown() != true){
 			System.out.println(GSenzor.getAngle());
 		}*/
-		Podvozek.doleva(180);
+		//Podvozek.doleva(180);
+		model.newMap();
 	}
 }
