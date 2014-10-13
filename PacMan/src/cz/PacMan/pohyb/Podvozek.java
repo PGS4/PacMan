@@ -1,6 +1,5 @@
 package cz.PacMan.pohyb;
 
-import cz.PacMan.senzory.GSenzor;
 import lejos.nxt.Motor;
 
 public class Podvozek {
@@ -20,11 +19,8 @@ public class Podvozek {
 		int hodnota;
 		Motor.A.forward();
 		Motor.B.forward();
-		hodnota = GSenzor.getAngle();
-		while (GSenzor.getAngle() != (hodnota - uhel)) {
 			Motor.A.setSpeed(900);
 			Motor.B.setSpeed(0);
-		}
 		Motor.A.stop();
 		Motor.B.stop();
 	}
@@ -33,11 +29,8 @@ public class Podvozek {
 		int hodnota;
 		Motor.A.forward();
 		Motor.B.forward();
-		hodnota = GSenzor.getAngle();
-		while (GSenzor.getAngle() != (hodnota + uhel)) {
-			Motor.A.setSpeed(0);
-			Motor.B.setSpeed(900);
-		}
+		Motor.A.setSpeed(0);
+		Motor.B.setSpeed(900);
 		Motor.A.stop();
 		Motor.B.stop();
 	}
