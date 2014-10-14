@@ -1,19 +1,10 @@
 package cz.PacMan.main;
 
-import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.List;
 
-import cz.PacMan.entities.Zed;
-
 public class Model {
-	private static ArrayList<String> lines = new ArrayList<String>();
-	private static ArrayList<Zed> zdi = new ArrayList<Zed>();
-	private String line;
-	private static ArrayList<int[]> enemyPositions = new ArrayList<int[]>();
 	private static Hashtable<List<Integer>, String> map = new Hashtable<List<Integer>, String>();
-	private Enumeration<?> objectsInMap;
 	
 	public Model() {
 	}
