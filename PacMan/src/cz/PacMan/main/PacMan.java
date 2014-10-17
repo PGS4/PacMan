@@ -1,28 +1,36 @@
 package cz.PacMan.main;
 
+import cz.PacMan.senzory.BSenzor;
 import cz.PacMan.senzory.LSenzor;
 import lejos.nxt.Button;
 
 public class PacMan {
-	private static int LSenzorHodnota;
-	private static int count = 0;
 
 	public static void main(String[] args) {
 		// Model model = new Model();
 		// model.newMap();
+		/*while(!Button.ESCAPE.isDown()){
+		System.out.println(LSenzor.getLight());
+		}*/
 		
-		System.out.println("Leve tlacitko: \n" + "Svetelny senzor");
-		while (!Button.ESCAPE.isDown()) {
-			if (Button.LEFT.isDown()&&count == 0) {
-				count = 1;
-				LSenzorHodnota = LSenzor.getLight();
-				System.out.println("Hodnota je: " + LSenzorHodnota);
-				System.out.println("Stiskni ENTER pro start!");
+		System.out.println("Leve tlacitko: \n" + "podlaha");
+			while (!Button.LEFT.isDown()) {
 			}
-			if (Button.ENTER.isDown()&&count == 1) {
-				Controller control = new Controller();
-				control.start(LSenzorHodnota);
+			LSenzor.Lkalibrace();
+			System.out.println(LSenzor.getLight());
+			System.out.println("Prave tlacitko: \n" + "bod");
+			while (!Button.RIGHT.isDown()) {
 			}
-		}
+			LSenzor.Hkalibrace();
+			System.out.println(LSenzor.getLight());
+			System.out.println("Stiskni ENTER pro start!");
+			while (!Button.ENTER.isDown()) {
+			}
+			Controller control = new Controller();
+			Thread c = new Thread(control);
+			c.setDaemon(true);
+			c.start();
+			while(!Button.ESCAPE.isDown()&&!BSenzor.isPressed()){
+			}
 	}
 }

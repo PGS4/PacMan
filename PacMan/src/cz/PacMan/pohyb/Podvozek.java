@@ -11,15 +11,15 @@ public class Podvozek {
 	}
 
 	public static void podvozekStop() {
-		Motor.A.stop();
-		Motor.B.stop();
+		Motor.B.stop(true);
+		Motor.A.stop(true);
 	}
 
 	public static void doprava() {
 		Motor.A.backward();
 		Motor.B.forward();
-			Motor.A.setSpeed(200);
-			Motor.B.setSpeed(200);
+		Motor.A.setSpeed(200);
+		Motor.B.setSpeed(200);
 	}
 
 	public static void doleva() {
