@@ -11,12 +11,12 @@ public class LSenzor {
 		senzor.setFloodlight(true);
 	}
 	public static void Lkalibrace() {
-		senzor.setLow(senzor.getLightValue());
+		senzor.calibrateLow();
 		
 	}
 
 	public static void Hkalibrace() {
-		senzor.setHigh(senzor.getLightValue());
+		senzor.calibrateHigh();
 	}
 
 	public static int getLight() {
