@@ -12,9 +12,9 @@ import cz.PacMan.senzory.USenzor;
 
 public class Controller implements Runnable {
 
-	private int value90 = 1200;
+	private int value90 = 1500;
 	private int podlaha, bod;
-	private int cooldown = 700;
+	private int cooldown = 600;
 	private List<Integer> pozice = Arraye.asList(5, 4);
 	private int direction = Podvozek.getDirection();
 	private View view;
@@ -40,12 +40,9 @@ public class Controller implements Runnable {
 				Podvozek.dozadu();
 				while (!(getLValue() > 15)) {
 				}
-				cekej(400);
+				cekej(150);
 				Podvozek.stop();
-				if(Podvozek.getSDirection()==1){
 					Podvozek.SDoleva();
-					cekej(500);
-				}
 				if(USenzor.getDistance()>25) {
 					Podvozek.doleva();
 					cekej(value90);
@@ -54,10 +51,7 @@ public class Controller implements Runnable {
 					Podvozek.dopredu();
 				}else{
 					setPoint("#", "LEFT");
-					if(Podvozek.getSDirection()==0){
 						Podvozek.SDoprava();
-						cekej(500);
-					}
 					if(USenzor.getDistance()>25){
 						Podvozek.doprava();
 						cekej(value90);
@@ -72,16 +66,13 @@ public class Controller implements Runnable {
 			}
 
 			if (getLValue() > 20 && cooldown <= 0) {
-				cooldown = 700;
+				cooldown = 600;
 				Podvozek.stop();
 				setPoint(".", "DEFAULT");
 				ArrayList<String> mapValue = new ArrayList<String>();
 				mapValue = checkValue(Podvozek.getDirection(), pozice);
 				if (mapValue.get(0).equals(" ")) {
-					if(Podvozek.getSDirection()==1){
 					Podvozek.SDoleva();
-					cekej(500);
-					}
 					if (USenzor.getDistance() > 25) {
 						doLeft();
 					} else {
@@ -89,10 +80,7 @@ public class Controller implements Runnable {
 						if (mapValue.get(1).equals(" ")) {
 							Podvozek.dopredu();
 						} else if (mapValue.get(2).equals(" ")) {
-							if(Podvozek.getSDirection()==0){
 								Podvozek.SDoprava();
-								cekej(500);
-							}
 							if (USenzor.getDistance() > 30) {
 								doRight();
 							}
@@ -114,10 +102,7 @@ public class Controller implements Runnable {
 				} else if (mapValue.get(1).equals(" ")) {
 					Podvozek.dopredu();
 				} else if (mapValue.get(2).equals(" ")) {
-					if(Podvozek.getSDirection()==0){
 					Podvozek.SDoprava();
-					cekej(500);
-					}
 					if (USenzor.getDistance() > 30) {
 						doRight();
 					} else {
@@ -160,20 +145,36 @@ public class Controller implements Runnable {
 			key.add(getMValue(x - 1, y));
 			key.add(getMValue(x, y - 1));
 			key.add(getMValue(x + 1, y));
+			key.add(getMValue(x - 2, y));
+			key.add(getMValue(x, y - 2));
+			key.add(getMValue(x + 2, y));
 		} else if (direction == 1) {
 			key.add(getMValue(x, y - 1));
 			key.add(getMValue(x + 1, y));
 			key.add(getMValue(x, y + 1));
+			key.add(getMValue(x - 2, y));
+			key.add(getMValue(x, y - 2));
+			key.add(getMValue(x + 2, y));
 		} else if (direction == 2) {
 			key.add(getMValue(x + 1, y));
 			key.add(getMValue(x, y + 1));
 			key.add(getMValue(x - 1, y));
+			key.add(getMValue(x - 2, y));
+			key.add(getMValue(x, y - 2));
+			key.add(getMValue(x + 2, y));
 		} else if (direction == 3) {
 			key.add(getMValue(x, y + 1));
 			key.add(getMValue(x - 1, y));
 			key.add(getMValue(x, y - 1));
+			key.add(getMValue(x - 2, y));
+			key.add(getMValue(x, y - 2));
+			key.add(getMValue(x + 2, y));
 		}
 		return key;
+	}
+	
+	private void getPathPriorities(){
+		
 	}
 	
 	private void doBack(){
@@ -192,8 +193,11 @@ public class Controller implements Runnable {
 	}
 
 	private void doLeft() {
+		cekej(100);
 		Podvozek.dozadu();
-		cekej(250);
+		while (!(getLValue() > 15)) {
+		}
+		cekej(150);
 		Podvozek.stop();
 		cekej(200);
 		Podvozek.doleva();
@@ -204,8 +208,11 @@ public class Controller implements Runnable {
 	}
 
 	private void doRight() {
+		cekej(100);
 		Podvozek.dozadu();
-		cekej(200);
+		while (!(getLValue() > 15)) {
+		}
+		cekej(150);
 		Podvozek.stop();
 		cekej(200);
 		Podvozek.doprava();
