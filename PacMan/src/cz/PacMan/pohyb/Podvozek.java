@@ -3,11 +3,14 @@ package cz.PacMan.pohyb;
 import lejos.nxt.Motor;
 
 public class Podvozek {
-	public static void dozadu(int rychlost) {
+	private static int direction = 0;
+	private static int sDirection = 0;
+
+	public static void dopredu() {
+		Motor.A.setAcceleration(3000);
+		Motor.B.setAcceleration(3000);
 		Motor.A.forward();
 		Motor.B.forward();
-		Motor.A.setSpeed(rychlost);
-		Motor.B.setSpeed(rychlost);
 	}
 
 	public static void stop() {
@@ -15,38 +18,57 @@ public class Podvozek {
 		Motor.A.stop(true);
 	}
 
-	public static void doprava() {
-		Motor.A.backward();
-		Motor.B.forward();
-		Motor.A.setSpeed(100);
-		Motor.B.setSpeed(100);
-	}
-
 	public static void doleva() {
-		Motor.A.forward();
-		Motor.B.backward();
-		Motor.A.setSpeed(100);
-		Motor.B.setSpeed(100);
+		if(direction == 0){
+			direction = 3;
+		}else {
+			direction -= 1;
+		}
+		Motor.A.setAcceleration(800);
+		Motor.B.setAcceleration(800);
+		Motor.A.rotate(-331, true);
+		Motor.B.rotate(331, true);
 	}
 
-	public static void dopredu(int rychlost) {
+	public static void doprava() {
+		if(direction == 3){
+			direction = 0;
+		}else {
+			direction += 1;
+		}
+		Motor.A.setAcceleration(800);
+		Motor.B.setAcceleration(800);
+		Motor.A.rotate(330, true);
+		Motor.B.rotate(-331, true);
+	}
+
+	public static void dozadu() {
+		Motor.A.setAcceleration(2000);
+		Motor.B.setAcceleration(2000);
 		Motor.A.backward();
 		Motor.B.backward();
-		Motor.A.setSpeed(rychlost);
-		Motor.B.setSpeed(rychlost);
 	}
 	
-	public static void jenVpravo(int rychlost) {
-		Motor.A.backward();
-		Motor.A.setSpeed(rychlost);
-		Motor.B.stop();
-	}
-	
-	public static void jenVlevo(int rychlost) {
-		
-			Motor.B.backward();
-			Motor.B.setSpeed(rychlost);
-			Motor.A.stop();
+	public static void SDoprava(){
+		if(sDirection == 0){
+			sDirection =1;
+			Motor.C.rotate(-190);
 		}
+	}
+	
+	public static void SDoleva(){
+		if(sDirection == 1){
+			sDirection =0;
+			Motor.C.rotate(190);
+		}
+	}
+
+	public static int getDirection(){
+		return direction;
+	}
+	
+	public static int getSDirection(){
+		return sDirection;
+	}
 	
 }

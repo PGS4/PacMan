@@ -9,7 +9,7 @@ public class Model {
 	public Model() {
 	}
 
-	public void newMap() {
+	public static void newMap() {
 		for (int y = 0; y < 8; y++) {
 			for (int x = 0; x < 11; x++) {
 				if (y == 0 || y == 8 - 1 || x == 0 || x == 11 - 1) {
@@ -21,5 +21,13 @@ public class Model {
 				}
 			}
 		}
+	}
+	
+	public static Hashtable<List<Integer>, String> getMap(){
+		return map;
+	}
+	
+	public static void putToMap(List<Integer> key, String value){
+		map.put(key, value);
 	}
 }
