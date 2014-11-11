@@ -1,6 +1,8 @@
 package cz.PacMan.main;
 
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
 
@@ -42,23 +44,23 @@ public class Controller implements Runnable {
 				}
 				cekej(150);
 				Podvozek.stop();
-					Podvozek.SDoleva();
-				if(USenzor.getDistance()>25) {
+				Podvozek.SDoleva();
+				if (USenzor.getDistance() > 25) {
 					Podvozek.doleva();
 					cekej(value90);
 					Podvozek.stop();
 					cekej(50);
 					Podvozek.dopredu();
-				}else{
+				} else {
 					setPoint("#", "LEFT");
-						Podvozek.SDoprava();
-					if(USenzor.getDistance()>25){
+					Podvozek.SDoprava();
+					if (USenzor.getDistance() > 25) {
 						Podvozek.doprava();
 						cekej(value90);
 						Podvozek.stop();
 						cekej(50);
 						Podvozek.dopredu();
-					}else{
+					} else {
 						setPoint("#", "RIGHT");
 						doBack();
 					}
@@ -69,7 +71,8 @@ public class Controller implements Runnable {
 				cooldown = 600;
 				Podvozek.stop();
 				setPoint(".", "DEFAULT");
-				ArrayList<String> mapValue = new ArrayList<String>();
+				choosePath();
+				/*ArrayList<String> mapValue = new ArrayList<String>();
 				mapValue = checkValue(Podvozek.getDirection(), pozice);
 				if (mapValue.get(0).equals(" ")) {
 					Podvozek.SDoleva();
@@ -80,7 +83,7 @@ public class Controller implements Runnable {
 						if (mapValue.get(1).equals(" ")) {
 							Podvozek.dopredu();
 						} else if (mapValue.get(2).equals(" ")) {
-								Podvozek.SDoprava();
+							Podvozek.SDoprava();
 							if (USenzor.getDistance() > 30) {
 								doRight();
 							}
@@ -131,7 +134,7 @@ public class Controller implements Runnable {
 						options.add(2);
 					}
 					choosePath(options);
-				}
+				}*/
 			}
 		}
 		Thread.yield();
@@ -172,12 +175,46 @@ public class Controller implements Runnable {
 		}
 		return key;
 	}
-	
-	private void getPathPriorities(){
-		
+
+	private Hashtable<Integer, List<String>> getPathPriorities() {
+		Hashtable<Integer, List<String>> priorities = new Hashtable<Integer, List<String>>();
+		List<String> p1, p2, p3;
+		p1 = new ArrayList<String>();
+		p2 = new ArrayList<String>();
+		p3 = new ArrayList<String>();
+		ArrayList<String> points = new ArrayList<String>();
+		points = checkValue(Podvozek.getDirection(), pozice);
+		if (points.get(0).equals(" ")) {
+			if (points.get(3).equals(" ")) {
+				p1.add("LEFT");
+			} else {
+				p2.add("LEFT");
+			}
+		} else if (points.get(0).equals(".")) {
+			p3.add("LEFT");
+		}
+		if (points.get(1).equals(" ")) {
+			if (points.get(4).equals(" ")) {
+				p1.add("FRONT");
+			} else {
+				p2.add("FRONT");
+			}
+		} else if (points.get(1).equals(".")) {
+			p3.add("FRONT");
+		}
+		if (points.get(2).equals(" ")) {
+			if (points.get(5).equals(" ")) {
+				p1.add("RIGHT");
+			} else {
+				p2.add("RIGHT");
+			}
+		} else if (points.get(2).equals(".")) {
+			p3.add("RIGHT");
+		}
+		return priorities;
 	}
-	
-	private void doBack(){
+
+	private void doBack() {
 		Podvozek.stop();
 		cekej(250);
 		Podvozek.doprava();
@@ -226,24 +263,124 @@ public class Controller implements Runnable {
 		return Model.getMap().get(Arraye.asList(x, y));
 	}
 
-	private void choosePath(ArrayList<Integer> options) {
+	private void choosePath() {
+		Hashtable<Integer, List<String>> options = getPathPriorities();
 		Random rand = new Random();
-		if (options.size() != 0) {
-			int direction = options.get(rand.nextInt(options.size()));
-			if (direction == 0) {
-				doLeft();
-			}
-			if (direction == 1) {
-				Podvozek.dopredu();
-			}
-			if (direction == 2) {
-				doRight();
+		if (options.keys() != null) {
+			List<String> p1, p2, p3;
+			p1 = options.get(1);
+			p2 = options.get(2);
+			p3 = options.get(3);
+			if (p1.size() != 0) {
+				String side;
+				side = p1.get(rand.nextInt(p1.size()));
+				while (move(side, 1) == false && p1.size() != 0) {
+					p1.clear();
+					options = getPathPriorities();
+					p1 = options.get(1);
+					p2 = options.get(2);
+					p3 = options.get(3);
+					side = p1.get(rand.nextInt(p1.size()));
+				}
+				if (p1.size() == 0) {
+					if (p2.size() != 0) {
+						side = p2.get(rand.nextInt(p1.size()));
+						while (move(side, 2) == false && p2.size() != 0) {
+							p2.clear();
+							options = getPathPriorities();
+							p1 = options.get(1);
+							p2 = options.get(2);
+							p3 = options.get(3);
+							side = p2.get(rand.nextInt(p2.size()));
+						}
+						if (p2.size() == 0) {
+							if (p3.size() != 0) {
+								side = p3.get(rand.nextInt(p3.size()));
+								move(side, 3);
+							} else {
+								doBack();
+							}
+						}
+					} else if (p3.size() != 0) {
+						do {
+							side = p3.get(rand.nextInt(p3.size()));
+						} while (move(side, 3) == false);
+					} else {
+						doBack();
+					}
+				}
+			} if (p2.size() != 0) {
+				String side = p2.get(rand.nextInt(p1.size()));;
+				while (move(side, 2) == false && p2.size() != 0) {
+					p2.clear();
+					options = getPathPriorities();
+					p1 = options.get(1);
+					p2 = options.get(2);
+					p3 = options.get(3);
+					side = p2.get(rand.nextInt(p2.size()));
+				}
+				if (p2.size() == 0) {
+					if (p3.size() != 0) {
+						side = p3.get(rand.nextInt(p3.size()));
+						move(side, 3);
+					} else {
+						doBack();
+					}
+				}
+			} else if (p3.size() != 0) {
+				String side;
+				do {
+					side = p3.get(rand.nextInt(p3.size()));
+				} while (move(side, 3) == false);
 			}
 		} else {
-			Podvozek.dozadu();
-			cekej(250);
 			doBack();
 		}
+		/*
+		 * Random rand = new Random(); if (options.size() != 0) { int direction
+		 * = options.get(rand.nextInt(options.size())); if (direction == 0) {
+		 * doLeft(); } if (direction == 1) { Podvozek.dopredu(); } if (direction
+		 * == 2) { doRight(); } } else { Podvozek.dozadu(); cekej(250);
+		 * doBack(); }
+		 */
+	}
+
+	private boolean move(String side, int priority) {
+		if (priority == 1 || priority == 2) {
+			if (side.equals("LEFT")) {
+				Podvozek.SDoleva();
+				if (USenzor.getDistance() > 25) {
+					doLeft();
+					return true;
+				} else {
+					setPoint("#", "LEFT");
+					return false;
+				}
+			} else if (side.equals("FRONT")) {
+				Podvozek.dopredu();
+				return true;
+			} else if (side.equals("RIGHT")) {
+				Podvozek.SDoprava();
+				if (USenzor.getDistance() > 30) {
+					doRight();
+					return true;
+				} else {
+					setPoint("#", "RIGHT");
+					return false;
+				}
+			} else {
+				return false;
+			}
+		} else {
+			if (side.equals("LEFT")) {
+				doLeft();
+			} else if (side.equals("FRONT")) {
+				Podvozek.dopredu();
+			} else if (side.equals("RIGHT")) {
+				doRight();
+			}
+		}
+		return true;
 	}
 
 	private int getLValue() {
