@@ -56,14 +56,14 @@ public class Podvozek {
 	public static void SDoprava(){
 		if(sDirection == 0){
 			sDirection =1;
-			Motor.C.rotate(-190);
+			Motor.C.rotate(-180);
 		}
 	}
 	
 	public static void SDoleva(){
 		if(sDirection == 1){
 			sDirection =0;
-			Motor.C.rotate(190);
+			Motor.C.rotate(180);
 		}
 	}
 

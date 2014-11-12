@@ -19,7 +19,7 @@ public class Controller implements Runnable {
 	private List<Integer> pozice = Arraye.asList(5, 4);
 	private int direction = Podvozek.getDirection();
 	private View view;
-	private int priority=0;
+	private int priority = 0;
 
 	public Controller(int podlaha, int bod) {
 		this.podlaha = podlaha;
@@ -44,30 +44,18 @@ public class Controller implements Runnable {
 				cekej(150);
 				Podvozek.stop();
 				String side;
-				do{
-				side = choosePath();
-				}while(move(side,priority)==false);
-				/*Podvozek.SDoleva();
-				if (USenzor.getDistance() > 25) {
-					Podvozek.doleva();
-					cekej(value90);
-					Podvozek.stop();
-					cekej(50);
-					Podvozek.dopredu();
-				} else {
-					setPoint("#", "LEFT");
-					Podvozek.SDoprava();
-					if (USenzor.getDistance() > 25) {
-						Podvozek.doprava();
-						cekej(value90);
-						Podvozek.stop();
-						cekej(50);
-						Podvozek.dopredu();
-					} else {
-						setPoint("#", "RIGHT");
-						doBack();
-					}
-				}*/
+				do {
+					side = choosePath();
+				} while (move(side, priority) == false);
+				/*
+				 * Podvozek.SDoleva(); if (USenzor.getDistance() > 25) {
+				 * Podvozek.doleva(); cekej(value90); Podvozek.stop();
+				 * cekej(50); Podvozek.dopredu(); } else { setPoint("#",
+				 * "LEFT"); Podvozek.SDoprava(); if (USenzor.getDistance() > 25)
+				 * { Podvozek.doprava(); cekej(value90); Podvozek.stop();
+				 * cekej(50); Podvozek.dopredu(); } else { setPoint("#",
+				 * "RIGHT"); doBack(); } }
+				 */
 			}
 
 			if (getLValue() > 20 && cooldown <= 0) {
@@ -75,10 +63,11 @@ public class Controller implements Runnable {
 				Podvozek.stop();
 				setPoint(".", "DEFAULT");
 				String side;
-				do{
-				side = choosePath();
-				}while(move(side,priority)==false);
-				//choosePath();
+				do {
+					side = choosePath();
+					System.out.println(side);
+				} while (move(side, priority) == false);
+				// choosePath();
 				/*
 				 * ArrayList<String> mapValue = new ArrayList<String>();
 				 * mapValue = checkValue(Podvozek.getDirection(), pozice); if
@@ -130,30 +119,54 @@ public class Controller implements Runnable {
 			key.add(getMValue(x - 1, y));
 			key.add(getMValue(x, y - 1));
 			key.add(getMValue(x + 1, y));
-			key.add(getMValue(x - 2, y));
-			key.add(getMValue(x, y - 2));
-			key.add(getMValue(x + 2, y));
+			if (!getMValue(x - 2, y).equals(null)) {
+				key.add(getMValue(x - 2, y));
+			}
+			if (!getMValue(x, y - 2).equals(null)) {
+				key.add(getMValue(x, y - 2));
+			}
+			if (!getMValue(x + 2, y).equals(null)) {
+				key.add(getMValue(x + 2, y));
+			}
 		} else if (direction == 1) {
 			key.add(getMValue(x, y - 1));
 			key.add(getMValue(x + 1, y));
 			key.add(getMValue(x, y + 1));
-			key.add(getMValue(x - 2, y));
-			key.add(getMValue(x, y - 2));
-			key.add(getMValue(x + 2, y));
+			if (!getMValue(x, y - 2).equals(null)) {
+				key.add(getMValue(x, y - 2));
+			}
+			if (!getMValue(x + 2, y).equals(null)) {
+				key.add(getMValue(x + 2, y));
+			}
+			if (!getMValue(x, y + 2).equals(null)) {
+				key.add(getMValue(x, y + 2));
+			}
 		} else if (direction == 2) {
 			key.add(getMValue(x + 1, y));
 			key.add(getMValue(x, y + 1));
 			key.add(getMValue(x - 1, y));
-			key.add(getMValue(x - 2, y));
-			key.add(getMValue(x, y - 2));
-			key.add(getMValue(x + 2, y));
+			if (!getMValue(x + 2, y).equals(null)) {
+				key.add(getMValue(x + 2, y));
+			}
+			if (!getMValue(x, y + 2).equals(null)) {
+				key.add(getMValue(x, y + 2));
+			}
+			if (!getMValue(x - 2, y).equals(null)) {
+				key.add(getMValue(x - 2, y));
+			}
 		} else if (direction == 3) {
 			key.add(getMValue(x, y + 1));
 			key.add(getMValue(x - 1, y));
 			key.add(getMValue(x, y - 1));
-			key.add(getMValue(x - 2, y));
-			key.add(getMValue(x, y - 2));
-			key.add(getMValue(x + 2, y));
+			if (!getMValue(x, y + 2).equals(null)) {
+				key.add(getMValue(x, y + 2));
+			}
+			if (!getMValue(x - 2, y).equals(null)) {
+				key.add(getMValue(x - 2, y));
+			}
+			if (!getMValue(x, y - 2).equals(null)) {
+				key.add(getMValue(x, y - 2));
+			}
 		}
 		return key;
 	}
@@ -200,6 +213,9 @@ public class Controller implements Runnable {
 		} else if (points.get(2).equals(".")) {
 			p3.add("RIGHT");
 		}
+		priorities.put(1, p1);
+		priorities.put(2, p2);
+		priorities.put(3, p3);
 		return priorities;
 	}
 
@@ -208,6 +224,11 @@ public class Controller implements Runnable {
 	 */
 
 	private void doBack() {
+		cekej(100);
+		Podvozek.dozadu();
+		while (!(getLValue() > 15)) {
+		}
+		cekej(200);
 		Podvozek.stop();
 		cekej(250);
 		Podvozek.doprava();
@@ -231,7 +252,7 @@ public class Controller implements Runnable {
 		Podvozek.dozadu();
 		while (!(getLValue() > 15)) {
 		}
-		cekej(150);
+		cekej(200);
 		Podvozek.stop();
 		cekej(200);
 		Podvozek.doleva();
@@ -277,95 +298,59 @@ public class Controller implements Runnable {
 	/**
 	 * Vybere kudy pojede robot
 	 * 
-	 * @return
-	 * 		  vybraný smìr jízdy robota
+	 * @return vybraný smìr jízdy robota
 	 */
 
 	private String choosePath() {
 		Hashtable<Integer, List<String>> options = getPathPriorities();
 		Random rand = new Random();
 		String side = null;
-		if (options.keys() != null) {
-			List<String> p1, p2, p3;
-			p1 = options.get(1);
-			p2 = options.get(2);
-			p3 = options.get(3);
-			if(p1.size() != 0){
-				side = p1.get(rand.nextInt(p1.size()));
-				priority = 1;
-			}else if(p2.size() !=0){
-				side = p2.get(rand.nextInt(p2.size()));
-				priority = 2;
-			}else if(p3.size() !=0){
-				side = p3.get(rand.nextInt(p3.size()));
-				priority = 3;
-			}
-			/*if (p1.size() != 0) {
-				String side;
-				side = p1.get(rand.nextInt(p1.size()));
-				while (move(side, 1) == false && p1.size() != 0) {
-					p1.clear();
-					options = getPathPriorities();
-					p1 = options.get(1);
-					p2 = options.get(2);
-					p3 = options.get(3);
-					side = p1.get(rand.nextInt(p1.size()));
-				}
-				if (p1.size() == 0) {
-					if (p2.size() != 0) {
-						side = p2.get(rand.nextInt(p1.size()));
-						while (move(side, 2) == false && p2.size() != 0) {
-							p2.clear();
-							options = getPathPriorities();
-							p1 = options.get(1);
-							p2 = options.get(2);
-							p3 = options.get(3);
-							side = p2.get(rand.nextInt(p2.size()));
-						}
-						if (p2.size() == 0) {
-							if (p3.size() != 0) {
-								side = p3.get(rand.nextInt(p3.size()));
-								move(side, 3);
-							} else {
-								doBack();
-							}
-						}
-					} else if (p3.size() != 0) {
-						do {
-							side = p3.get(rand.nextInt(p3.size()));
-						} while (move(side, 3) == false);
-					} else {
-						doBack();
-					}
-				}
-			}
-			if (p2.size() != 0) {
-				String side = p2.get(rand.nextInt(p1.size()));
-				;
-				while (move(side, 2) == false && p2.size() != 0) {
-					p2.clear();
-					options = getPathPriorities();
-					p1 = options.get(1);
-					p2 = options.get(2);
-					p3 = options.get(3);
-					side = p2.get(rand.nextInt(p2.size()));
-				}
-				if (p2.size() == 0) {
-					if (p3.size() != 0) {
-						side = p3.get(rand.nextInt(p3.size()));
-						move(side, 3);
-					} else {
-						doBack();
-					}
-				}
-			} else if (p3.size() != 0) {
-				String side;
-				do {
-					side = p3.get(rand.nextInt(p3.size()));
-				} while (move(side, 3) == false);
-			}*/
-		} else {
-			side="BACK";
+		List<String> p1, p2, p3;
+		p1 = new ArrayList<String>();
+		p2 = new ArrayList<String>();
+		p3 = new ArrayList<String>();
+		p1 = options.get(1);
+		p2 = options.get(2);
+		p3 = options.get(3);
+		System.out.println("p1: " + p1.size());
+		System.out.println("p2: " + p2.size());
+		System.out.println("p3: " + p3.size());
+		if (p1.size() != 0) {
+			side = p1.get(rand.nextInt(p1.size()));
+			priority = 1;
+		} else if (p2.size() != 0) {
+			side = p2.get(rand.nextInt(p2.size()));
+			priority = 2;
+		} else if (p3.size() != 0) {
+			side = p3.get(rand.nextInt(p3.size()));
+			priority = 3;
+		}
+		/*
+		 * if (p1.size() != 0) { String side; side =
+		 * p1.get(rand.nextInt(p1.size())); while (move(side, 1) == false &&
+		 * p1.size() != 0) { p1.clear(); options = getPathPriorities(); p1 =
+		 * options.get(1); p2 = options.get(2); p3 = options.get(3); side =
+		 * p1.get(rand.nextInt(p1.size())); } if (p1.size() == 0) { if
+		 * (p2.size() != 0) { side = p2.get(rand.nextInt(p1.size())); while
+		 * (move(side, 2) == false && p2.size() != 0) { p2.clear(); options =
+		 * getPathPriorities(); p1 = options.get(1); p2 = options.get(2); p3 =
+		 * options.get(3); side = p2.get(rand.nextInt(p2.size())); } if
+		 * (p2.size() == 0) { if (p3.size() != 0) { side =
+		 * p3.get(rand.nextInt(p3.size())); move(side, 3); } else { doBack(); }
+		 * } } else if (p3.size() != 0) { do { side =
+		 * p3.get(rand.nextInt(p3.size())); } while (move(side, 3) == false); }
+		 * else { doBack(); } } } if (p2.size() != 0) { String side =
+		 * p2.get(rand.nextInt(p1.size())); ; while (move(side, 2) == false &&
+		 * p2.size() != 0) { p2.clear(); options = getPathPriorities(); p1 =
+		 * options.get(1); p2 = options.get(2); p3 = options.get(3); side =
+		 * p2.get(rand.nextInt(p2.size())); } if (p2.size() == 0) { if
+		 * (p3.size() != 0) { side = p3.get(rand.nextInt(p3.size())); move(side,
+		 * 3); } else { doBack(); } } } else if (p3.size() != 0) { String side;
+		 * do { side = p3.get(rand.nextInt(p3.size())); } while (move(side, 3)
+		 * == false); }
+		 */
+		else {
+			side = "BACK";
 		}
 		return side;
 		/*
@@ -391,6 +376,7 @@ public class Controller implements Runnable {
 		if (priority == 1 || priority == 2) {
 			if (side.equals("LEFT")) {
 				Podvozek.SDoleva();
+				cekej(100);
 				if (USenzor.getDistance() > 25) {
 					doLeft();
 					return true;
@@ -403,6 +389,7 @@ public class Controller implements Runnable {
 				return true;
 			} else if (side.equals("RIGHT")) {
 				Podvozek.SDoprava();
+				cekej(100);
 				if (USenzor.getDistance() > 30) {
 					doRight();
 					return true;
@@ -421,7 +408,7 @@ public class Controller implements Runnable {
 				Podvozek.dopredu();
 			} else if (side.equals("RIGHT")) {
 				doRight();
-			}else{
+			} else {
 				doBack();
 				return true;
 			}
