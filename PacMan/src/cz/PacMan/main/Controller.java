@@ -375,28 +375,28 @@ public class Controller implements Runnable {
 	private boolean move(String side, int priority) {
 		if (priority == 1 || priority == 2) {
 			if (side.equals("LEFT")) {
-				Podvozek.SDoleva();
-				cekej(100);
-				if (USenzor.getDistance() > 25) {
+				//Podvozek.SDoleva();
+				//cekej(100);
+				//if (USenzor.getDistance() > 25) {
 					doLeft();
 					return true;
-				} else {
+				/*} else {
 					setPoint("#", "LEFT");
 					return false;
-				}
+				}*/
 			} else if (side.equals("FRONT")) {
 				Podvozek.dopredu();
 				return true;
 			} else if (side.equals("RIGHT")) {
-				Podvozek.SDoprava();
+				/*Podvozek.SDoprava();
 				cekej(100);
-				if (USenzor.getDistance() > 30) {
+				if (USenzor.getDistance() > 30) {*/
 					doRight();
 					return true;
-				} else {
+				/*} else {
 					setPoint("#", "RIGHT");
 					return false;
-				}
+				}*/
 			} else {
 				doBack();
 				return true;
@@ -506,6 +506,19 @@ public class Controller implements Runnable {
 				x -= 1;
 			} else if (direction == 1) {
 				x += 1;
+			}
+
+			Model.putToMap(Arraye.asList(x, y), objekt);
+		}
+		if (position.equals("RIGHT")) {
+			if (direction == 0) {
+				x += 1;
+			} else if (direction == 2) {
+				x -= 1;
+			} else if (direction == 3) {
+				y -= 1;
+			} else if (direction == 1) {
+				y += 1;
 			}
 
 			Model.putToMap(Arraye.asList(x, y), objekt);
