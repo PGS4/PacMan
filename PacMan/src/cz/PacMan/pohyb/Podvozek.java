@@ -17,7 +17,7 @@ public class Podvozek {
 
 	public static void stop() {
 		Motor.B.stop(true);
-		Motor.A.stop(true);
+		Motor.A.stop();
 	}
 
 	public static void doleva() {
@@ -29,7 +29,7 @@ public class Podvozek {
 		Motor.A.setAcceleration(800);
 		Motor.B.setAcceleration(800);
 		Motor.A.rotate(-337, true);
-		Motor.B.rotate(337, true);
+		Motor.B.rotate(337);
 	}
 
 	public static void doprava() {
@@ -41,7 +41,7 @@ public class Podvozek {
 		Motor.A.setAcceleration(800);
 		Motor.B.setAcceleration(800);
 		Motor.A.rotate(337, true);
-		Motor.B.rotate(-337, true);
+		Motor.B.rotate(-337);
 	}
 
 	public static void dozadu() {

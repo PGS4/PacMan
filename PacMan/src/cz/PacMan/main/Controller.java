@@ -3,13 +3,10 @@ package cz.PacMan.main;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
-import java.util.Random;
-
 import lejos.nxt.Button;
 import cz.PacMan.pohyb.Podvozek;
 import cz.PacMan.senzory.BSenzor;
 import cz.PacMan.senzory.LSenzor;
-import cz.PacMan.senzory.USenzor;
 
 public class Controller implements Runnable {
 
@@ -30,7 +27,7 @@ public class Controller implements Runnable {
 	public void zapnout() {
 		Model.newMap();
 		view.paint();
-		//Model.putToMap(pozice, "S");
+		// Model.putToMap(pozice, "S");
 		Podvozek.dopredu();
 		while (!Button.ESCAPE.isDown()) {
 			cooldown -= 1;
@@ -46,15 +43,6 @@ public class Controller implements Runnable {
 				do {
 					side = choosePath();
 				} while (move(side, priority) == false);
-				/*
-				 * Podvozek.SDoleva(); if (USenzor.getDistance() > 25) {
-				 * Podvozek.doleva(); cekej(value90); Podvozek.stop();
-				 * cekej(50); Podvozek.dopredu(); } else { setPoint("#",
-				 * "LEFT"); Podvozek.SDoprava(); if (USenzor.getDistance() > 25)
-				 * { Podvozek.doprava(); cekej(value90); Podvozek.stop();
-				 * cekej(50); Podvozek.dopredu(); } else { setPoint("#",
-				 * "RIGHT"); doBack(); } }
-				 */
 			}
 
 			if (getLValue() > 20 && cooldown <= 0) {
@@ -65,35 +53,6 @@ public class Controller implements Runnable {
 				do {
 					side = choosePath();
 				} while (move(side, priority) == false);
-				// choosePath();
-				/*
-				 * ArrayList<String> mapValue = new ArrayList<String>();
-				 * mapValue = checkValue(Podvozek.getDirection(), pozice); if
-				 * (mapValue.get(0).equals(" ")) { Podvozek.SDoleva(); if
-				 * (USenzor.getDistance() > 25) { doLeft(); } else {
-				 * setPoint("#", "LEFT"); if (mapValue.get(1).equals(" ")) {
-				 * Podvozek.dopredu(); } else if (mapValue.get(2).equals(" ")) {
-				 * Podvozek.SDoprava(); if (USenzor.getDistance() > 30) {
-				 * doRight(); } } else { setPoint("#", "RIGHT");
-				 * ArrayList<Integer> options = new ArrayList<Integer>(); if
-				 * (mapValue.get(0).equals(".")) { options.add(0); } if
-				 * (mapValue.get(1).equals(".")) { options.add(1); } if
-				 * (mapValue.get(2).equals(".")) { options.add(2); }
-				 * choosePath(options); } } } else if
-				 * (mapValue.get(1).equals(" ")) { Podvozek.dopredu(); } else if
-				 * (mapValue.get(2).equals(" ")) { Podvozek.SDoprava(); if
-				 * (USenzor.getDistance() > 30) { doRight(); } else {
-				 * setPoint("#", "RIGHT"); ArrayList<Integer> options = new
-				 * ArrayList<Integer>(); if (mapValue.get(0).equals(".")) {
-				 * options.add(0); } if (mapValue.get(1).equals(".")) {
-				 * options.add(1); } if (mapValue.get(2).equals(".")) {
-				 * options.add(2); } choosePath(options); } } else {
-				 * ArrayList<Integer> options = new ArrayList<Integer>(); if
-				 * (mapValue.get(0).equals(".")) { options.add(0); } if
-				 * (mapValue.get(1).equals(".")) { options.add(1); } if
-				 * (mapValue.get(2).equals(".")) { options.add(2); }
-				 * choosePath(options); }
-				 */
 			}
 		}
 		Thread.yield();
@@ -117,54 +76,34 @@ public class Controller implements Runnable {
 			key.add(getMValue(x - 1, y));
 			key.add(getMValue(x, y - 1));
 			key.add(getMValue(x + 1, y));
-			if (!getMValue(x - 2, y).equals(null)) {
-				key.add(getMValue(x - 2, y));
-			}
-			if (!getMValue(x, y - 2).equals(null)) {
-				key.add(getMValue(x, y - 2));
-			}
-			if (!getMValue(x + 2, y).equals(null)) {
-				key.add(getMValue(x + 2, y));
-			}
+			key.add(getMValue(x - 2, y));
+			key.add(getMValue(x, y - 2));
+			key.add(getMValue(x + 2, y));
+			key.add(getMValue(x, y + 1));
 		} else if (direction == 1) {
 			key.add(getMValue(x, y - 1));
 			key.add(getMValue(x + 1, y));
 			key.add(getMValue(x, y + 1));
-			if (!getMValue(x, y - 2).equals(null)) {
-				key.add(getMValue(x, y - 2));
-			}
-			if (!getMValue(x + 2, y).equals(null)) {
-				key.add(getMValue(x + 2, y));
-			}
-			if (!getMValue(x, y + 2).equals(null)) {
-				key.add(getMValue(x, y + 2));
-			}
+			key.add(getMValue(x, y - 2));
+			key.add(getMValue(x + 2, y));
+			key.add(getMValue(x, y + 2));
+			key.add(getMValue(x - 1, y));
 		} else if (direction == 2) {
 			key.add(getMValue(x + 1, y));
 			key.add(getMValue(x, y + 1));
 			key.add(getMValue(x - 1, y));
-			if (!getMValue(x + 2, y).equals(null)) {
-				key.add(getMValue(x + 2, y));
-			}
-			if (!getMValue(x, y + 2).equals(null)) {
-				key.add(getMValue(x, y + 2));
-			}
-			if (!getMValue(x - 2, y).equals(null)) {
-				key.add(getMValue(x - 2, y));
-			}
+			key.add(getMValue(x + 2, y));
+			key.add(getMValue(x, y + 2));
+			key.add(getMValue(x - 2, y));
+			key.add(getMValue(x, y - 1));
 		} else if (direction == 3) {
 			key.add(getMValue(x, y + 1));
 			key.add(getMValue(x - 1, y));
 			key.add(getMValue(x, y - 1));
-			if (!getMValue(x, y + 2).equals(null)) {
-				key.add(getMValue(x, y + 2));
-			}
-			if (!getMValue(x - 2, y).equals(null)) {
-				key.add(getMValue(x - 2, y));
-			}
-			if (!getMValue(x, y - 2).equals(null)) {
-				key.add(getMValue(x, y - 2));
-			}
+			key.add(getMValue(x, y + 2));
+			key.add(getMValue(x - 2, y));
+			key.add(getMValue(x, y - 2));
+			key.add(getMValue(x + 1, y));
 		}
 		return key;
 	}
@@ -189,39 +128,39 @@ public class Controller implements Runnable {
 				p1.add("LEFT");
 			} else {
 				if (points.get(3).equals(".")) {
-					p2.add("LEFT");
+					p1.add("LEFT");
 				} else {
 					p1.add("LEFT");
 				}
 			}
 		} else if (points.get(0).equals(".")) {
-			p3.add("LEFT");
+			p1.add("LEFT");
 		}
 		if (points.get(1).equals(" ")) {
 			if (points.get(4).equals(" ")) {
 				p1.add("FRONT");
 			} else {
 				if (points.get(4).equals(".")) {
-					p2.add("FRONT");
+					p1.add("FRONT");
 				} else {
 					p1.add("FRONT");
 				}
 			}
 		} else if (points.get(1).equals(".")) {
-			p3.add("FRONT");
+			p1.add("FRONT");
 		}
 		if (points.get(2).equals(" ")) {
 			if (points.get(5).equals(" ")) {
 				p1.add("RIGHT");
 			} else {
 				if (points.get(5).equals(".")) {
-					p2.add("RIGHT");
+					p1.add("RIGHT");
 				} else {
 					p1.add("RIGHT");
 				}
 			}
 		} else if (points.get(2).equals(".")) {
-			p3.add("RIGHT");
+			p1.add("RIGHT");
 		}
 		priorities.put(1, p1);
 		priorities.put(2, p2);
@@ -317,21 +256,39 @@ public class Controller implements Runnable {
 		p2 = options.get(2);
 		p3 = options.get(3);
 		if (p1.size() != 0) {
-			side = chooseBestSide(p1);
+			if (p1.size() > 1) {
+				side = chooseBestSide(p1);
+			} else {
+				side = p1.get(0);
+				ArrayList<String> keys = checkValue(Podvozek.getDirection(),
+						pozice);
+				if (keys.get(6).equals("x")) {
+					setPoint("x", "MIDDLE");
+				}
+			}
 			priority = 1;
 		} else if (p2.size() != 0) {
-			side = chooseBestSide(p2);
+			if (p2.size() > 1) {
+				side = chooseBestSide(p2);
+			} else {
+				side = p2.get(0);
+			}
 			priority = 2;
 		} else if (p3.size() != 0) {
-			side = chooseBestSide(p3);
+			if (p3.size() > 1) {
+				side = chooseBestSide(p3);
+			} else {
+				side = p3.get(0);
+			}
 			priority = 3;
 		} else {
 			side = "BACK";
+			setPoint("x", "MIDDLE");
 		}
 		return side;
 	}
-	
-	private String chooseBestSide(List<String> options){
+
+	private String chooseBestSide(List<String> options) {
 		int direction = Podvozek.getDirection();
 		String side;
 		int left, right, front;
@@ -339,7 +296,7 @@ public class Controller implements Runnable {
 		right = 0;
 		front = 0;
 		// side = p1.get(rand.nextInt(p1.size()));
-		for (int y = 2; y < 8; y++) {
+		for (int y = 2; y < 8 && left < 9 && right < 9 && front < 9; y++) {
 			for (int x = 2; x < 11; x++) {
 				if (getMValue(x, y).equals(" ")) {
 					String pSide = "BACK";
@@ -355,8 +312,7 @@ public class Controller implements Runnable {
 								if (vzdalenost > Math.sqrt((x - x0) ^ 2
 										+ (y - y0) ^ 2)) {
 									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0)
-													^ 2));
+											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
 									cSide = "LEFT";
 								}
 							}
@@ -365,8 +321,7 @@ public class Controller implements Runnable {
 								if (vzdalenost > Math.sqrt((x - x0) ^ 2
 										+ (y - y0) ^ 2)) {
 									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0)
-													^ 2));
+											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
 									cSide = "FRONT";
 								}
 							}
@@ -375,8 +330,7 @@ public class Controller implements Runnable {
 								if (vzdalenost > Math.sqrt((x - x0) ^ 2
 										+ (y - y0) ^ 2)) {
 									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0)
-													^ 2));
+											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
 									cSide = "RIGHT";
 								}
 							}
@@ -386,8 +340,7 @@ public class Controller implements Runnable {
 								if (vzdalenost > Math.sqrt((x - x0) ^ 2
 										+ (y - y0) ^ 2)) {
 									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0)
-													^ 2));
+											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
 									cSide = "LEFT";
 								}
 							}
@@ -396,8 +349,7 @@ public class Controller implements Runnable {
 								if (vzdalenost > Math.sqrt((x - x0) ^ 2
 										+ (y - y0) ^ 2)) {
 									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0)
-													^ 2));
+											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
 									cSide = "FRONT";
 								}
 							}
@@ -406,8 +358,7 @@ public class Controller implements Runnable {
 								if (vzdalenost > Math.sqrt((x - x0) ^ 2
 										+ (y - y0) ^ 2)) {
 									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0)
-													^ 2));
+											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
 									cSide = "RIGHT";
 								}
 							}
@@ -417,8 +368,7 @@ public class Controller implements Runnable {
 								if (vzdalenost > Math.sqrt((x - x0) ^ 2
 										+ (y - y0) ^ 2)) {
 									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0)
-													^ 2));
+											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
 									cSide = "LEFT";
 								}
 							}
@@ -427,8 +377,7 @@ public class Controller implements Runnable {
 								if (vzdalenost > Math.sqrt((x - x0) ^ 2
 										+ (y - y0) ^ 2)) {
 									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0)
-													^ 2));
+											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
 									cSide = "FRONT";
 								}
 							}
@@ -437,8 +386,7 @@ public class Controller implements Runnable {
 								if (vzdalenost > Math.sqrt((x - x0) ^ 2
 										+ (y - y0) ^ 2)) {
 									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0)
-													^ 2));
+											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
 									cSide = "RIGHT";
 								}
 							}
@@ -448,8 +396,7 @@ public class Controller implements Runnable {
 								if (vzdalenost > Math.sqrt((x - x0) ^ 2
 										+ (y - y0) ^ 2)) {
 									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0)
-													^ 2));
+											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
 									cSide = "LEFT";
 								}
 							}
@@ -458,8 +405,7 @@ public class Controller implements Runnable {
 								if (vzdalenost > Math.sqrt((x - x0) ^ 2
 										+ (y - y0) ^ 2)) {
 									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0)
-													^ 2));
+											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
 									cSide = "FRONT";
 								}
 							}
@@ -468,8 +414,7 @@ public class Controller implements Runnable {
 								if (vzdalenost > Math.sqrt((x - x0) ^ 2
 										+ (y - y0) ^ 2)) {
 									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0)
-													^ 2));
+											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
 									cSide = "RIGHT";
 								}
 							}
@@ -619,6 +564,9 @@ public class Controller implements Runnable {
 
 			pozice = Arraye.asList(x, y);
 
+			Model.putToMap(pozice, objekt);
+		}
+		if (position.equals("MIDDLE")) {
 			Model.putToMap(pozice, objekt);
 		}
 		if (position.equals("LEFT")) {
