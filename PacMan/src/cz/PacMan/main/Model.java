@@ -13,24 +13,28 @@ public class Model {
 	public static void newMap() {
 		String line;
 		ArrayList<String> lines = new ArrayList<String>();
-		line = "###########";
+		line = "#############";
 		lines.add(line);
-		line = "#         #";
+		line = "#############";
 		lines.add(line);
-		line = "# ## # ## #";
+		line = "##         ##";
 		lines.add(line);
-		line = "# #     # #";
+		line = "## ## # ## ##";
 		lines.add(line);
-		line = "#   #S#   #";
+		line = "## #     # ##";
 		lines.add(line);
-		line = "# #     # #";
+		line = "##   #S#   ##";
 		lines.add(line);
-		line = "#   # #   #";
+		line = "## #     # ##";
 		lines.add(line);
-		line = "###########";
+		line = "##   # #   ##";
 		lines.add(line);
-		for (int y = 0; y < 8; y++) {
-			for (int x = 0; x < 11; x++) {
+		line = "#############";
+		lines.add(line);
+		line = "#############";
+		lines.add(line);
+		for (int y = 0; y < lines.size(); y++) {
+			for (int x = 0; x < lines.get(y).length(); x++) {
 				/*if (y == 0 || y == 8 - 1 || x == 0 || x == 11 - 1) {
 					List<Integer> souradnice = Arraye.asList(x, y);
 					map.put(souradnice, "#");

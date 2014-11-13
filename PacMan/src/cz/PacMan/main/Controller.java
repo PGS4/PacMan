@@ -13,10 +13,10 @@ import cz.PacMan.senzory.USenzor;
 
 public class Controller implements Runnable {
 
-	private int value90 = 1500;
+	private int value90 = 1350;
 	private int podlaha, bod;
 	private int cooldown = 600;
-	private List<Integer> pozice = Arraye.asList(5, 4);
+	private List<Integer> pozice = Arraye.asList(6, 5);
 	private int direction = Podvozek.getDirection();
 	private View view;
 	private int priority = 0;
@@ -30,7 +30,7 @@ public class Controller implements Runnable {
 	public void zapnout() {
 		Model.newMap();
 		view.paint();
-		Model.putToMap(pozice, "S");
+		//Model.putToMap(pozice, "S");
 		Podvozek.dopredu();
 		while (!Button.ESCAPE.isDown()) {
 			cooldown -= 1;
@@ -41,7 +41,6 @@ public class Controller implements Runnable {
 				Podvozek.dozadu();
 				while (!(getLValue() > 15)) {
 				}
-				cekej(150);
 				Podvozek.stop();
 				String side;
 				do {
@@ -65,7 +64,6 @@ public class Controller implements Runnable {
 				String side;
 				do {
 					side = choosePath();
-					System.out.println(side);
 				} while (move(side, priority) == false);
 				// choosePath();
 				/*
@@ -190,7 +188,11 @@ public class Controller implements Runnable {
 			if (points.get(3).equals(" ")) {
 				p1.add("LEFT");
 			} else {
-				p2.add("LEFT");
+				if (points.get(3).equals(".")) {
+					p2.add("LEFT");
+				} else {
+					p1.add("LEFT");
+				}
 			}
 		} else if (points.get(0).equals(".")) {
 			p3.add("LEFT");
@@ -199,7 +201,11 @@ public class Controller implements Runnable {
 			if (points.get(4).equals(" ")) {
 				p1.add("FRONT");
 			} else {
-				p2.add("FRONT");
+				if (points.get(4).equals(".")) {
+					p2.add("FRONT");
+				} else {
+					p1.add("FRONT");
+				}
 			}
 		} else if (points.get(1).equals(".")) {
 			p3.add("FRONT");
@@ -208,7 +214,11 @@ public class Controller implements Runnable {
 			if (points.get(5).equals(" ")) {
 				p1.add("RIGHT");
 			} else {
-				p2.add("RIGHT");
+				if (points.get(5).equals(".")) {
+					p2.add("RIGHT");
+				} else {
+					p1.add("RIGHT");
+				}
 			}
 		} else if (points.get(2).equals(".")) {
 			p3.add("RIGHT");
@@ -233,14 +243,11 @@ public class Controller implements Runnable {
 		cekej(250);
 		Podvozek.doprava();
 		cekej(value90);
-		Podvozek.stop();
-		cekej(50);
-		Podvozek.stop();
-		cekej(200);
 		Podvozek.doprava();
 		cekej(value90);
 		Podvozek.stop();
 		cekej(50);
+		Podvozek.dopredu();
 	}
 
 	/**
@@ -248,7 +255,6 @@ public class Controller implements Runnable {
 	 */
 
 	private void doLeft() {
-		cekej(100);
 		Podvozek.dozadu();
 		while (!(getLValue() > 15)) {
 		}
@@ -267,11 +273,10 @@ public class Controller implements Runnable {
 	 */
 
 	private void doRight() {
-		cekej(100);
 		Podvozek.dozadu();
 		while (!(getLValue() > 15)) {
 		}
-		cekej(150);
+		cekej(200);
 		Podvozek.stop();
 		cekej(200);
 		Podvozek.doprava();
@@ -303,7 +308,6 @@ public class Controller implements Runnable {
 
 	private String choosePath() {
 		Hashtable<Integer, List<String>> options = getPathPriorities();
-		Random rand = new Random();
 		String side = null;
 		List<String> p1, p2, p3;
 		p1 = new ArrayList<String>();
@@ -312,54 +316,191 @@ public class Controller implements Runnable {
 		p1 = options.get(1);
 		p2 = options.get(2);
 		p3 = options.get(3);
-		System.out.println("p1: " + p1.size());
-		System.out.println("p2: " + p2.size());
-		System.out.println("p3: " + p3.size());
 		if (p1.size() != 0) {
-			side = p1.get(rand.nextInt(p1.size()));
+			side = chooseBestSide(p1);
 			priority = 1;
 		} else if (p2.size() != 0) {
-			side = p2.get(rand.nextInt(p2.size()));
+			side = chooseBestSide(p2);
 			priority = 2;
 		} else if (p3.size() != 0) {
-			side = p3.get(rand.nextInt(p3.size()));
+			side = chooseBestSide(p3);
 			priority = 3;
-		}
-		/*
-		 * if (p1.size() != 0) { String side; side =
-		 * p1.get(rand.nextInt(p1.size())); while (move(side, 1) == false &&
-		 * p1.size() != 0) { p1.clear(); options = getPathPriorities(); p1 =
-		 * options.get(1); p2 = options.get(2); p3 = options.get(3); side =
-		 * p1.get(rand.nextInt(p1.size())); } if (p1.size() == 0) { if
-		 * (p2.size() != 0) { side = p2.get(rand.nextInt(p1.size())); while
-		 * (move(side, 2) == false && p2.size() != 0) { p2.clear(); options =
-		 * getPathPriorities(); p1 = options.get(1); p2 = options.get(2); p3 =
-		 * options.get(3); side = p2.get(rand.nextInt(p2.size())); } if
-		 * (p2.size() == 0) { if (p3.size() != 0) { side =
-		 * p3.get(rand.nextInt(p3.size())); move(side, 3); } else { doBack(); }
-		 * } } else if (p3.size() != 0) { do { side =
-		 * p3.get(rand.nextInt(p3.size())); } while (move(side, 3) == false); }
-		 * else { doBack(); } } } if (p2.size() != 0) { String side =
-		 * p2.get(rand.nextInt(p1.size())); ; while (move(side, 2) == false &&
-		 * p2.size() != 0) { p2.clear(); options = getPathPriorities(); p1 =
-		 * options.get(1); p2 = options.get(2); p3 = options.get(3); side =
-		 * p2.get(rand.nextInt(p2.size())); } if (p2.size() == 0) { if
-		 * (p3.size() != 0) { side = p3.get(rand.nextInt(p3.size())); move(side,
-		 * 3); } else { doBack(); } } } else if (p3.size() != 0) { String side;
-		 * do { side = p3.get(rand.nextInt(p3.size())); } while (move(side, 3)
-		 * == false); }
-		 */
-		else {
+		} else {
 			side = "BACK";
 		}
 		return side;
-		/*
-		 * Random rand = new Random(); if (options.size() != 0) { int direction
-		 * = options.get(rand.nextInt(options.size())); if (direction == 0) {
-		 * doLeft(); } if (direction == 1) { Podvozek.dopredu(); } if (direction
-		 * == 2) { doRight(); } } else { Podvozek.dozadu(); cekej(250);
-		 * doBack(); }
-		 */
+	}
+	
+	private String chooseBestSide(List<String> options){
+		int direction = Podvozek.getDirection();
+		String side;
+		int left, right, front;
+		left = 0;
+		right = 0;
+		front = 0;
+		// side = p1.get(rand.nextInt(p1.size()));
+		for (int y = 2; y < 8; y++) {
+			for (int x = 2; x < 11; x++) {
+				if (getMValue(x, y).equals(" ")) {
+					String pSide = "BACK";
+					String cSide = "BACK";
+					int vzdalenost = 100;
+					for (int i = 0; i < options.size(); i++) {
+						int x0 = pozice.get(0);
+						int y0 = pozice.get(1);
+						pSide = options.get(i);
+						if (direction == 0) {
+							if (pSide.equals("LEFT")) {
+								x0 -= 1;
+								if (vzdalenost > Math.sqrt((x - x0) ^ 2
+										+ (y - y0) ^ 2)) {
+									vzdalenost = (int) Math.round(Math
+											.sqrt((x - x0) ^ 2 + (y - x0)
+													^ 2));
+									cSide = "LEFT";
+								}
+							}
+							if (pSide.equals("FRONT")) {
+								y0 -= 1;
+								if (vzdalenost > Math.sqrt((x - x0) ^ 2
+										+ (y - y0) ^ 2)) {
+									vzdalenost = (int) Math.round(Math
+											.sqrt((x - x0) ^ 2 + (y - x0)
+													^ 2));
+									cSide = "FRONT";
+								}
+							}
+							if (pSide.equals("RIGHT")) {
+								x0 += 1;
+								if (vzdalenost > Math.sqrt((x - x0) ^ 2
+										+ (y - y0) ^ 2)) {
+									vzdalenost = (int) Math.round(Math
+											.sqrt((x - x0) ^ 2 + (y - x0)
+													^ 2));
+									cSide = "RIGHT";
+								}
+							}
+						} else if (direction == 1) {
+							if (pSide.equals("LEFT")) {
+								y0 -= 1;
+								if (vzdalenost > Math.sqrt((x - x0) ^ 2
+										+ (y - y0) ^ 2)) {
+									vzdalenost = (int) Math.round(Math
+											.sqrt((x - x0) ^ 2 + (y - x0)
+													^ 2));
+									cSide = "LEFT";
+								}
+							}
+							if (pSide.equals("FRONT")) {
+								x0 += 1;
+								if (vzdalenost > Math.sqrt((x - x0) ^ 2
+										+ (y - y0) ^ 2)) {
+									vzdalenost = (int) Math.round(Math
+											.sqrt((x - x0) ^ 2 + (y - x0)
+													^ 2));
+									cSide = "FRONT";
+								}
+							}
+							if (pSide.equals("RIGHT")) {
+								y0 += 1;
+								if (vzdalenost > Math.sqrt((x - x0) ^ 2
+										+ (y - y0) ^ 2)) {
+									vzdalenost = (int) Math.round(Math
+											.sqrt((x - x0) ^ 2 + (y - x0)
+													^ 2));
+									cSide = "RIGHT";
+								}
+							}
+						} else if (direction == 2) {
+							if (pSide.equals("LEFT")) {
+								x0 += 1;
+								if (vzdalenost > Math.sqrt((x - x0) ^ 2
+										+ (y - y0) ^ 2)) {
+									vzdalenost = (int) Math.round(Math
+											.sqrt((x - x0) ^ 2 + (y - x0)
+													^ 2));
+									cSide = "LEFT";
+								}
+							}
+							if (pSide.equals("FRONT")) {
+								y0 += 1;
+								if (vzdalenost > Math.sqrt((x - x0) ^ 2
+										+ (y - y0) ^ 2)) {
+									vzdalenost = (int) Math.round(Math
+											.sqrt((x - x0) ^ 2 + (y - x0)
+													^ 2));
+									cSide = "FRONT";
+								}
+							}
+							if (pSide.equals("RIGHT")) {
+								x0 -= 1;
+								if (vzdalenost > Math.sqrt((x - x0) ^ 2
+										+ (y - y0) ^ 2)) {
+									vzdalenost = (int) Math.round(Math
+											.sqrt((x - x0) ^ 2 + (y - x0)
+													^ 2));
+									cSide = "RIGHT";
+								}
+							}
+						} else if (direction == 3) {
+							if (pSide.equals("LEFT")) {
+								y0 += 1;
+								if (vzdalenost > Math.sqrt((x - x0) ^ 2
+										+ (y - y0) ^ 2)) {
+									vzdalenost = (int) Math.round(Math
+											.sqrt((x - x0) ^ 2 + (y - x0)
+													^ 2));
+									cSide = "LEFT";
+								}
+							}
+							if (pSide.equals("FRONT")) {
+								x0 -= 1;
+								if (vzdalenost > Math.sqrt((x - x0) ^ 2
+										+ (y - y0) ^ 2)) {
+									vzdalenost = (int) Math.round(Math
+											.sqrt((x - x0) ^ 2 + (y - x0)
+													^ 2));
+									cSide = "FRONT";
+								}
+							}
+							if (pSide.equals("RIGHT")) {
+								y0 -= 1;
+								if (vzdalenost > Math.sqrt((x - x0) ^ 2
+										+ (y - y0) ^ 2)) {
+									vzdalenost = (int) Math.round(Math
+											.sqrt((x - x0) ^ 2 + (y - x0)
+													^ 2));
+									cSide = "RIGHT";
+								}
+							}
+						}
+					}
+					if (cSide.equals("LEFT")) {
+						left += 1;
+					}
+					if (cSide.equals("FRONT")) {
+						front += 1;
+					}
+					if (cSide.equals("RIGHT")) {
+						right += 1;
+					}
+				}
+			}
+		}
+		if (left >= right) {
+			if (left >= front) {
+				side = "LEFT";
+			} else {
+				side = "FRONT";
+			}
+		} else {
+			if (right >= front) {
+				side = "RIGHT";
+			} else {
+				side = "FRONT";
+			}
+		}
+		return side;
 	}
 
 	/**
@@ -375,28 +516,27 @@ public class Controller implements Runnable {
 	private boolean move(String side, int priority) {
 		if (priority == 1 || priority == 2) {
 			if (side.equals("LEFT")) {
-				//Podvozek.SDoleva();
-				//cekej(100);
-				//if (USenzor.getDistance() > 25) {
-					doLeft();
-					return true;
-				/*} else {
-					setPoint("#", "LEFT");
-					return false;
-				}*/
+				// Podvozek.SDoleva();
+				// cekej(100);
+				// if (USenzor.getDistance() > 25) {
+				doLeft();
+				return true;
+				/*
+				 * } else { setPoint("#", "LEFT"); return false; }
+				 */
 			} else if (side.equals("FRONT")) {
 				Podvozek.dopredu();
 				return true;
 			} else if (side.equals("RIGHT")) {
-				/*Podvozek.SDoprava();
-				cekej(100);
-				if (USenzor.getDistance() > 30) {*/
-					doRight();
-					return true;
-				/*} else {
-					setPoint("#", "RIGHT");
-					return false;
-				}*/
+				/*
+				 * Podvozek.SDoprava(); cekej(100); if (USenzor.getDistance() >
+				 * 30) {
+				 */
+				doRight();
+				return true;
+				/*
+				 * } else { setPoint("#", "RIGHT"); return false; }
+				 */
 			} else {
 				doBack();
 				return true;
