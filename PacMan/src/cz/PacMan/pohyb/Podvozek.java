@@ -10,14 +10,14 @@ public class Podvozek {
 		Motor.A.setAcceleration(3000);
 		Motor.B.setAcceleration(3000);
 		Motor.A.setSpeed(600);
-		Motor.B.setSpeed(600);
+		Motor.B.setSpeed(605);
 		Motor.A.forward();
 		Motor.B.forward();
 	}
 
 	public static void stop() {
 		Motor.B.stop(true);
-		Motor.A.stop();
+		Motor.A.stop(true);
 	}
 
 	public static void doleva() {
@@ -28,8 +28,8 @@ public class Podvozek {
 		}
 		Motor.A.setAcceleration(800);
 		Motor.B.setAcceleration(800);
-		Motor.A.rotate(-337, true);
-		Motor.B.rotate(337);
+		Motor.A.rotate(-338, true);
+		Motor.B.rotate(338, true);
 	}
 
 	public static void doprava() {
@@ -40,15 +40,15 @@ public class Podvozek {
 		}
 		Motor.A.setAcceleration(800);
 		Motor.B.setAcceleration(800);
-		Motor.A.rotate(337, true);
-		Motor.B.rotate(-337);
+		Motor.A.rotate(338, true);
+		Motor.B.rotate(-338,true);
 	}
 
 	public static void dozadu() {
 		Motor.A.setAcceleration(3000);
 		Motor.B.setAcceleration(3000);
 		Motor.A.setSpeed(500);
-		Motor.B.setSpeed(500);
+		Motor.B.setSpeed(505);
 		Motor.A.backward();
 		Motor.B.backward();
 	}

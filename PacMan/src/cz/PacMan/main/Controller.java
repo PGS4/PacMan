@@ -134,7 +134,7 @@ public class Controller implements Runnable {
 				}
 			}
 		} else if (points.get(0).equals(".")) {
-			p1.add("LEFT");
+			p3.add("LEFT");
 		}
 		if (points.get(1).equals(" ")) {
 			if (points.get(4).equals(" ")) {
@@ -147,7 +147,7 @@ public class Controller implements Runnable {
 				}
 			}
 		} else if (points.get(1).equals(".")) {
-			p1.add("FRONT");
+			p3.add("FRONT");
 		}
 		if (points.get(2).equals(" ")) {
 			if (points.get(5).equals(" ")) {
@@ -160,7 +160,7 @@ public class Controller implements Runnable {
 				}
 			}
 		} else if (points.get(2).equals(".")) {
-			p1.add("RIGHT");
+			p3.add("RIGHT");
 		}
 		priorities.put(1, p1);
 		priorities.put(2, p2);
@@ -194,6 +194,7 @@ public class Controller implements Runnable {
 	 */
 
 	private void doLeft() {
+		cekej(100);
 		Podvozek.dozadu();
 		while (!(getLValue() > 15)) {
 		}
@@ -212,6 +213,7 @@ public class Controller implements Runnable {
 	 */
 
 	private void doRight() {
+		cekej(100);
 		Podvozek.dozadu();
 		while (!(getLValue() > 15)) {
 		}
@@ -272,6 +274,11 @@ public class Controller implements Runnable {
 				side = chooseBestSide(p2);
 			} else {
 				side = p2.get(0);
+				ArrayList<String> keys = checkValue(Podvozek.getDirection(),
+						pozice);
+				if (keys.get(6).equals("x")) {
+					setPoint("x", "MIDDLE");
+				}
 			}
 			priority = 2;
 		} else if (p3.size() != 0) {
@@ -279,6 +286,11 @@ public class Controller implements Runnable {
 				side = chooseBestSide(p3);
 			} else {
 				side = p3.get(0);
+				ArrayList<String> keys = checkValue(Podvozek.getDirection(),
+						pozice);
+				if (keys.get(6).equals("x")) {
+					setPoint("x", "MIDDLE");
+				}
 			}
 			priority = 3;
 		} else {
@@ -296,7 +308,7 @@ public class Controller implements Runnable {
 		right = 0;
 		front = 0;
 		// side = p1.get(rand.nextInt(p1.size()));
-		for (int y = 2; y < 8 && left < 9 && right < 9 && front < 9; y++) {
+		for (int y = 2; y < 8; y++) {
 			for (int x = 2; x < 11; x++) {
 				if (getMValue(x, y).equals(" ")) {
 					String pSide = "BACK";
