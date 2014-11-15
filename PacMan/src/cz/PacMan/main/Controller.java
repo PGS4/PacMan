@@ -1,11 +1,9 @@
 package cz.PacMan.main;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
-
 import lejos.nxt.Button;
 import cz.PacMan.pohyb.Podvozek;
 import cz.PacMan.senzory.BSenzor;
