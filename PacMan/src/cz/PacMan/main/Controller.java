@@ -1,8 +1,11 @@
 package cz.PacMan.main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Random;
+
 import lejos.nxt.Button;
 import cz.PacMan.pohyb.Podvozek;
 import cz.PacMan.senzory.BSenzor;
@@ -289,19 +292,26 @@ public class Controller implements Runnable {
 	}
 
 	private String chooseBestSide(List<String> options) {
-		int direction = Podvozek.getDirection();
-		String side;
+		String side = "BACK";
 		int left, right, front;
+		double vleft, vfront, vright;
 		left = 0;
 		right = 0;
 		front = 0;
-		// side = p1.get(rand.nextInt(p1.size()));
-		for (int y = 2; y < 8 && left < 9 && right < 9 && front < 9; y++) {
+		vleft = 0;
+		vfront = 0;
+		vright = 0;
+		List<Double> vlefts, vfronts, vrights;
+		vlefts = new ArrayList<Double>();
+		vrights = new ArrayList<Double>();
+		vfronts = new ArrayList<Double>();
+		for (int y = 2; y < 8; y++) {
 			for (int x = 2; x < 11; x++) {
 				if (getMValue(x, y).equals(" ")) {
 					String pSide = "BACK";
 					String cSide = "BACK";
-					int vzdalenost = 100;
+					double vzdalenost = 10000;
+					options.add("BACK");
 					for (int i = 0; i < options.size(); i++) {
 						int x0 = pozice.get(0);
 						int y0 = pozice.get(1);
@@ -309,140 +319,442 @@ public class Controller implements Runnable {
 						if (direction == 0) {
 							if (pSide.equals("LEFT")) {
 								x0 -= 1;
-								if (vzdalenost > Math.sqrt((x - x0) ^ 2
-										+ (y - y0) ^ 2)) {
-									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
+								if (vzdalenost > Math
+										.sqrt((Math.pow(x - x0, 2))
+												+ (Math.pow(y - y0, 2)))) {
+									vzdalenost = Math
+											.sqrt((Math.pow(x - x0, 2))
+													+ (Math.pow(y - y0, 2)));
 									cSide = "LEFT";
+								} else if (vzdalenost == Math.sqrt((Math.pow(x
+										- x0, 2))
+										+ (Math.pow(y - y0, 2)))) {
+									cSide = "BACK";
+								}
+							}
+							if (pSide.equals("BACK")) {
+								y0 += 1;
+								if (vzdalenost > Math
+										.sqrt((Math.pow(x - x0, 2))
+												+ (Math.pow(y - y0, 2)))) {
+									vzdalenost = Math
+											.sqrt((Math.pow(x - x0, 2))
+													+ (Math.pow(y - y0, 2)));
+									cSide = "BACK";
+								} else if (vzdalenost == Math.sqrt((Math.pow(x
+										- x0, 2))
+										+ (Math.pow(y - y0, 2)))) {
+									cSide = "BACK";
 								}
 							}
 							if (pSide.equals("FRONT")) {
 								y0 -= 1;
-								if (vzdalenost > Math.sqrt((x - x0) ^ 2
-										+ (y - y0) ^ 2)) {
-									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
+								if (vzdalenost > Math
+										.sqrt((Math.pow(x - x0, 2))
+												+ (Math.pow(y - y0, 2)))) {
+									vzdalenost = Math
+											.sqrt((Math.pow(x - x0, 2))
+													+ (Math.pow(y - y0, 2)));
 									cSide = "FRONT";
+								} else if (vzdalenost == Math.sqrt((Math.pow(x
+										- x0, 2))
+										+ (Math.pow(y - y0, 2)))) {
+									cSide = "BACK";
 								}
 							}
 							if (pSide.equals("RIGHT")) {
 								x0 += 1;
-								if (vzdalenost > Math.sqrt((x - x0) ^ 2
-										+ (y - y0) ^ 2)) {
-									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
+								if (vzdalenost > Math
+										.sqrt((Math.pow(x - x0, 2))
+												+ (Math.pow(y - y0, 2)))) {
+									vzdalenost = Math
+											.sqrt((Math.pow(x - x0, 2))
+													+ (Math.pow(y - y0, 2)));
 									cSide = "RIGHT";
+								} else if (vzdalenost == Math.sqrt((Math.pow(x
+										- x0, 2))
+										+ (Math.pow(y - y0, 2)))) {
+									cSide = "BACK";
 								}
 							}
 						} else if (direction == 1) {
+							if (pSide.equals("BACK")) {
+								x0 -= 1;
+								if (vzdalenost > Math
+										.sqrt((Math.pow(x - x0, 2))
+												+ (Math.pow(y - y0, 2)))) {
+									vzdalenost = Math
+											.sqrt((Math.pow(x - x0, 2))
+													+ (Math.pow(y - y0, 2)));
+									cSide = "BACK";
+								} else if (vzdalenost == Math.sqrt((Math.pow(x
+										- x0, 2))
+										+ (Math.pow(y - y0, 2)))) {
+									cSide = "BACK";
+								}
+							}
 							if (pSide.equals("LEFT")) {
 								y0 -= 1;
-								if (vzdalenost > Math.sqrt((x - x0) ^ 2
-										+ (y - y0) ^ 2)) {
-									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
+								if (vzdalenost > Math.sqrt(Math.pow(x - x0, 2)
+										+ Math.pow(y - y0, 2))) {
+									vzdalenost = Math.sqrt(Math.pow(x - x0, 2)
+											+ Math.pow(y - y0, 2));
 									cSide = "LEFT";
+								} else if (vzdalenost == Math.sqrt((Math.pow(x
+										- x0, 2))
+										+ (Math.pow(y - y0, 2)))) {
+									cSide = "BACK";
 								}
 							}
 							if (pSide.equals("FRONT")) {
 								x0 += 1;
-								if (vzdalenost > Math.sqrt((x - x0) ^ 2
-										+ (y - y0) ^ 2)) {
-									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
+								if (vzdalenost > Math.sqrt(Math.pow(x - x0, 2)
+										+ Math.pow(y - y0, 2))) {
+									vzdalenost = Math.sqrt(Math.pow(x - x0, 2)
+											+ Math.pow(y - y0, 2));
 									cSide = "FRONT";
+								} else if (vzdalenost == Math.sqrt((Math.pow(x
+										- x0, 2))
+										+ (Math.pow(y - y0, 2)))) {
+									cSide = "BACK";
 								}
 							}
 							if (pSide.equals("RIGHT")) {
 								y0 += 1;
-								if (vzdalenost > Math.sqrt((x - x0) ^ 2
-										+ (y - y0) ^ 2)) {
-									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
+								if (vzdalenost > Math.sqrt(Math.pow(x - x0, 2)
+										+ Math.pow(y - y0, 2))) {
+									vzdalenost = Math.sqrt(Math.pow(x - x0, 2)
+											+ Math.pow(y - y0, 2));
 									cSide = "RIGHT";
+								} else if (vzdalenost == Math.sqrt((Math.pow(x
+										- x0, 2))
+										+ (Math.pow(y - y0, 2)))) {
+									cSide = "BACK";
 								}
 							}
 						} else if (direction == 2) {
+							if (pSide.equals("BACK")) {
+								y0 -= 1;
+								if (vzdalenost > Math
+										.sqrt((Math.pow(x - x0, 2))
+												+ (Math.pow(y - y0, 2)))) {
+									vzdalenost = Math
+											.sqrt((Math.pow(x - x0, 2))
+													+ (Math.pow(y - y0, 2)));
+									cSide = "BACK";
+								} else if (vzdalenost == Math.sqrt((Math.pow(x
+										- x0, 2))
+										+ (Math.pow(y - y0, 2)))) {
+									cSide = "BACK";
+								}
+							}
 							if (pSide.equals("LEFT")) {
 								x0 += 1;
-								if (vzdalenost > Math.sqrt((x - x0) ^ 2
-										+ (y - y0) ^ 2)) {
-									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
+								if (vzdalenost > Math.sqrt(Math.pow(x - x0, 2)
+										+ Math.pow(y - y0, 2))) {
+									vzdalenost = Math.sqrt(Math.pow(x - x0, 2)
+											+ Math.pow(y - y0, 2));
 									cSide = "LEFT";
+								} else if (vzdalenost == Math.sqrt((Math.pow(x
+										- x0, 2))
+										+ (Math.pow(y - y0, 2)))) {
+									cSide = "BACK";
 								}
 							}
 							if (pSide.equals("FRONT")) {
 								y0 += 1;
-								if (vzdalenost > Math.sqrt((x - x0) ^ 2
-										+ (y - y0) ^ 2)) {
-									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
+								if (vzdalenost > Math.sqrt(Math.pow(x - x0, 2)
+										+ Math.pow(y - y0, 2))) {
+									vzdalenost = Math.sqrt(Math.pow(x - x0, 2)
+											+ Math.pow(y - y0, 2));
 									cSide = "FRONT";
+								} else if (vzdalenost == Math.sqrt((Math.pow(x
+										- x0, 2))
+										+ (Math.pow(y - y0, 2)))) {
+									cSide = "BACK";
 								}
 							}
 							if (pSide.equals("RIGHT")) {
 								x0 -= 1;
-								if (vzdalenost > Math.sqrt((x - x0) ^ 2
-										+ (y - y0) ^ 2)) {
-									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
+								if (vzdalenost > Math.sqrt(Math.pow(x - x0, 2)
+										+ Math.pow(y - y0, 2))) {
+									vzdalenost = Math.sqrt(Math.pow(x - x0, 2)
+											+ Math.pow(y - y0, 2));
 									cSide = "RIGHT";
+								} else if (vzdalenost == Math.sqrt((Math.pow(x
+										- x0, 2))
+										+ (Math.pow(y - y0, 2)))) {
+									cSide = "BACK";
 								}
 							}
 						} else if (direction == 3) {
+							if (pSide.equals("BACK")) {
+								x0 += 1;
+								if (vzdalenost > Math
+										.sqrt((Math.pow(x - x0, 2))
+												+ (Math.pow(y - y0, 2)))) {
+									vzdalenost = Math
+											.sqrt((Math.pow(x - x0, 2))
+													+ (Math.pow(y - y0, 2)));
+									cSide = "BACK";
+								} else if (vzdalenost == Math.sqrt((Math.pow(x
+										- x0, 2))
+										+ (Math.pow(y - y0, 2)))) {
+									cSide = "BACK";
+								}
+							}
 							if (pSide.equals("LEFT")) {
 								y0 += 1;
-								if (vzdalenost > Math.sqrt((x - x0) ^ 2
-										+ (y - y0) ^ 2)) {
-									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
+								if (vzdalenost > Math.sqrt(Math.pow(x - x0, 2)
+										+ Math.pow(y - y0, 2))) {
+									vzdalenost = Math.sqrt(Math.pow(x - x0, 2)
+											+ Math.pow(y - y0, 2));
 									cSide = "LEFT";
+								} else if (vzdalenost == Math.sqrt((Math.pow(x
+										- x0, 2))
+										+ (Math.pow(y - y0, 2)))) {
+									cSide = "BACK";
 								}
 							}
 							if (pSide.equals("FRONT")) {
 								x0 -= 1;
-								if (vzdalenost > Math.sqrt((x - x0) ^ 2
-										+ (y - y0) ^ 2)) {
-									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
+								if (vzdalenost > Math.sqrt(Math.pow(x - x0, 2)
+										+ Math.pow(y - y0, 2))) {
+									vzdalenost = Math.sqrt(Math.pow(x - x0, 2)
+											+ Math.pow(y - y0, 2));
 									cSide = "FRONT";
+								} else if (vzdalenost == Math.sqrt((Math.pow(x
+										- x0, 2))
+										+ (Math.pow(y - y0, 2)))) {
+									cSide = "BACK";
 								}
 							}
 							if (pSide.equals("RIGHT")) {
 								y0 -= 1;
-								if (vzdalenost > Math.sqrt((x - x0) ^ 2
-										+ (y - y0) ^ 2)) {
-									vzdalenost = (int) Math.round(Math
-											.sqrt((x - x0) ^ 2 + (y - x0) ^ 2));
+								if (vzdalenost > Math.sqrt(Math.pow(x - x0, 2)
+										+ Math.pow(y - y0, 2))) {
+									vzdalenost = Math.sqrt(Math.pow(x - x0, 2)
+											+ Math.pow(y - y0, 2));
 									cSide = "RIGHT";
+								} else if (vzdalenost == Math.sqrt((Math.pow(x
+										- x0, 2))
+										+ (Math.pow(y - y0, 2)))) {
+									cSide = "BACK";
 								}
 							}
 						}
 					}
 					if (cSide.equals("LEFT")) {
 						left += 1;
+						vlefts.add(vzdalenost);
 					}
 					if (cSide.equals("FRONT")) {
 						front += 1;
+						vfronts.add(vzdalenost);
 					}
 					if (cSide.equals("RIGHT")) {
 						right += 1;
+						vrights.add(vzdalenost);
 					}
 				}
 			}
 		}
-		if (left >= right) {
-			if (left >= front) {
-				side = "LEFT";
-			} else {
-				side = "FRONT";
+		if (vlefts.size() != 0) {
+			for (int i = 0; i < vlefts.size(); i++) {
+				vleft += vlefts.get(i);
+			}
+			vleft = vleft / vlefts.size();
+		} else {
+			vleft = 1000;
+		}
+		if (vfronts.size() != 0) {
+			for (int i = 0; i < vfronts.size(); i++) {
+				vfront += vfronts.get(i);
+			}
+			vfront = vfront / vfronts.size();
+		} else {
+			vfront = 1000;
+		}
+		if (vrights.size() != 0) {
+			for (int i = 0; i < vrights.size(); i++) {
+				vright += vrights.get(i);
+			}
+			vright = vright / vrights.size();
+		} else {
+			vright = 1000;
+		}
+		if (left == 0) {
+			left = -1000;
+		}
+		if (right == 0) {
+			right = -1000;
+		}
+		if (front == 0) {
+			front = -1000;
+		}
+		if (front == -1000 && left == -1000 && right == -1000) {
+			Random rand = new Random();
+			int count = 0; 
+			do {
+				side = options.get(rand.nextInt(options.size()));
+				count +=1;
+			} while (side.equals("BACK")&& count<20);
+			if(count == 20){
+				side ="BACK";
 			}
 		} else {
-			if (right >= front) {
-				side = "RIGHT";
+			if (((left < 17 && left > 3) || left == -1000)
+					&& ((front < 17 && front > 3) || front == -1000)
+					&& ((right < 17 && right > 3) || right == -1000)) {
+				if (vleft < 1.5) {
+					if (vleft < vright) {
+						side = "LEFT";
+					} else {
+						if (vright < vfront) {
+							side = "RIGHT";
+						} else {
+							side = "FRONT";
+						}
+					}
+				} else {
+					if (vright < 1.5) {
+						if (vright < vfront) {
+							side = "RIGHT";
+						} else {
+							side = "FRONT";
+						}
+					} else {
+						if (vfront < 1.5) {
+							side = "FRONT";
+						} else {
+							side = regularChoose(left, front, right, vleft,
+									vfront, vright);
+						}
+					}
+				}
 			} else {
-				side = "FRONT";
+				side = regularChoose(left, front, right, vleft, vfront, vright);
+			}
+		}
+		return side;
+	}
+	
+	private String regularChoose(int left, int front, int right, double vleft,
+			double vfront, double vright) {
+		String side = "BACK";
+		if (left > front + 6) {
+			if (left > right + 6) {
+				side = "LEFT";
+			} else {
+				if (right > left + 6) {
+					side = "RIGHT";
+				} else {
+					if (vright > vleft) {
+						side = "LEFT";
+					} else {
+						side = "RIGHT";
+					}
+				}
+			}
+		} else {
+			if (front > right + 6) {
+				if (front > left + 6) {
+					side = "FRONT";
+				} else {
+					if (vfront > vleft) {
+						side = "LEFT";
+					} else {
+						side = "FRONT";
+					}
+				}
+			} else {
+				if (right > front + 6) {
+					if (right > left + 6) {
+						side = "RIGHT";
+					} else {
+						if (left > right + 6) {
+							side = "LEFT";
+						} else {
+							if (vleft > vright) {
+								side = "RIGHT";
+							} else {
+								side = "LEFT";
+							}
+						}
+					}
+				} else {
+					if (front > right) {
+						if (front > left) {
+							if (front > left + 6) {
+								if (vright > vleft) {
+									side = "LEFT";
+								} else {
+									side = "RIGHT";
+								}
+							} else {
+								if (vright < vleft) {
+									if (vright < vfront) {
+										side = "RIGHT";
+									} else {
+										side = "FRONT";
+									}
+								} else {
+									if (vleft < vfront) {
+										side = "LEFT";
+									} else {
+										side = "FRONT";
+									}
+								}
+							}
+						} else {
+							if (left > right + 6) {
+								if (vleft > vfront) {
+									side = "FRONT";
+								} else {
+									side = "LEFT";
+								}
+							} else {
+								if (vright < vleft) {
+									if (vright < vfront) {
+										side = "RIGHT";
+									} else {
+										side = "FRONT";
+									}
+								} else {
+									if (vleft < vfront) {
+										side = "LEFT";
+									} else {
+										side = "FRONT";
+									}
+								}
+							}
+						}
+					} else {
+						if (right > left) {
+							if (right > left + 6) {
+								if (vfront < vright) {
+									side = "FRONT";
+								} else {
+									side = "RIGHT";
+								}
+							}
+						} else {
+							if (vright < vleft) {
+								if (vright < vfront) {
+									side = "RIGHT";
+								} else {
+									side = "FRONT";
+								}
+							} else {
+								if (vleft < vfront) {
+									side = "LEFT";
+								} else {
+									side = "FRONT";
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 		return side;
