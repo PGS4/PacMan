@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Random;
+
 import lejos.nxt.Button;
 import cz.PacMan.pohyb.Podvozek;
 import cz.PacMan.senzory.BSenzor;
@@ -613,29 +614,51 @@ public class Controller implements Runnable {
 				side ="BACK";
 			}
 		} else {
-			if (((left < 17 && left > 3) || left == -1000)
-					&& ((front < 17 && front > 3) || front == -1000)
-					&& ((right < 17 && right > 3) || right == -1000)) {
-				if (vleft < 1.5) {
-					if (vleft < vright) {
-						side = "LEFT";
-					} else {
-						if (vright < vfront) {
-							side = "RIGHT";
+			if (((left < 17) || left == -1000)
+					&& ((front < 17) || front == -1000)
+					&& ((right < 17) || right == -1000)) {
+				if (vleft < 1.7 && left > 3) {
+					if (vfront < 1.7 && front > 3) {
+						if (vright < 1.7 && right >3) {
+							if (left > front) {
+								if (left > right) {
+									side = "LEFT";
+								} else {
+									side = "RIGHT";
+								}
+							} else if (front > right) {
+								side = "FRONT";
+							} else {
+								side = "RIGHT";
+							}
+						} else if (left > front) {
+							side = "LEFT";
 						} else {
 							side = "FRONT";
 						}
+					} else if (vright < 1.7 && right > 3) {
+						if (left > right) {
+							side = "LEFT";
+						} else {
+							side = "RIGHT";
+						}
+					}else{
+						side="LEFT";
 					}
 				} else {
-					if (vright < 1.5) {
-						if (vright < vfront) {
-							side = "RIGHT";
-						} else {
-							side = "FRONT";
+					if (vfront < 1.7 && front > 3) {
+						if(vright<1.7 && right > 3){
+							if (front > right) {
+								side = "FRONT";
+							} else {
+								side = "RIGHT";
+							}
+						}else{
+							side="FRONT";
 						}
 					} else {
-						if (vfront < 1.5) {
-							side = "FRONT";
+						if (vright < 1.7 && right > 3) {
+							side = "RIGHT";
 						} else {
 							side = regularChoose(left, front, right, vleft,
 									vfront, vright);
@@ -696,8 +719,8 @@ public class Controller implements Runnable {
 					if (front > right) {
 						if (front > left) {
 							if (front > left + 6) {
-								if (vright > vleft) {
-									side = "LEFT";
+								if (vright > vfront) {
+									side = "FRONT";
 								} else {
 									side = "RIGHT";
 								}
