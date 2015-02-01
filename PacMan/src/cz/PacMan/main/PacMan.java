@@ -1,5 +1,6 @@
 package cz.PacMan.main;
 
+import cz.PacMan.senzory.BSenzor;
 import cz.PacMan.senzory.LSenzor;
 import lejos.nxt.Button;
 
